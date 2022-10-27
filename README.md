@@ -1,5 +1,7 @@
 # [VIT Vellore](https://vit.ac.in/) - Clone
 
+### Not an admin panel. Admin panel is a different website
+
 ## Tech Stack
 
 - [Next.js](https://nextjs.org/)
