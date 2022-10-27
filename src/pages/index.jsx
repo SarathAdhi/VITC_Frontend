@@ -1,119 +1,108 @@
-import { Modal } from "@elements/Modal";
 import { PageLayout } from "@layouts/PageLayout";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Tabs, TabList, Tab } from "@chakra-ui/react";
-import { staffs } from "@utils/constants";
-import { LinkedItem } from "@elements/LinkedItem";
+import axios from "@lib/axios";
+import { LeftSideBar } from "@modules/faculty/Home/LeftSideBar";
+import { FacultyDetailsModal } from "@modules/faculty/Home/FacultyDetailsModal";
+import { useRouter } from "next/router";
 
-const tabLists = [
-  { key: "softwareSystems", name: "Software Systems" },
-  { key: "computationalIntelligence", name: "Computational Intelligence" },
-  { key: "databaseSystems", name: "Database Systems" },
-  { key: "informationSecurity", name: "Information Security" },
-  { key: "analytics", name: "Analytics" },
-  { key: "iot", name: "IoT" },
+const breadcrumbItem = [
+  {
+    href: "/",
+    name: "Home",
+  },
+  {
+    href: "/",
+    name: "School",
+  },
+  {
+    href: "/",
+    name: "SCOPE",
+  },
+  {
+    href: "/",
+    name: "",
+  },
 ];
 
-const LeftSideBar = (setSelectedTabKey) => (
-  <div className="w-full md:h-screen md:sticky top-0 flex-1">
-    <TabList className="!flex !flex-col !w-full items-start bg-white">
-      {tabLists.map((list) => (
-        <Tab
-          key={list.key}
-          _selected={{ color: "white", bg: "#224c9c" }}
-          className="text-left w-full !justify-start"
-          onClick={() => setSelectedTabKey(list.key)}
-        >
-          {list.name}
-        </Tab>
-      ))}
-    </TabList>
-  </div>
-);
-
-const ModalFooter = ({ href }) => (
-  <div className="w-full flex items-start">
-    <LinkedItem
-      href={href}
-      className="!px-2 !py-1 text-sm rounded-md bg-[#337ab7] text-white"
-    >
-      View more
-    </LinkedItem>
-  </div>
-);
-
-const PopUpModal = ({
-  id,
-  name,
-  college,
-  email,
-  isModalOpen,
-  setIsModalOpen,
-}) => (
-  <Modal
-    title={name}
-    isOpen={isModalOpen}
-    setIsOpen={setIsModalOpen}
-    Footer={() => ModalFooter({ href: `/staff/${id}` })}
-  >
-    <div>
-      <p>Email: {email}</p>
-      <p>Intercom:</p>
-      <p>Ph.D:</p>
-      <p>{college}</p>
-    </div>
-  </Modal>
-);
-
 const Home = () => {
-  const [staffDetails, setStaffDetails] = useState([]);
-  const [currentStaffDetails, setCurrentStaffDetails] = useState(null);
+  const router = useRouter();
+
+  const { search } = router.query;
+
+  console.log(search);
+
+  const [facultyDetails, setFacultyDetails] = useState([]);
+  const [filteredFacultyDetails, setfilteredFacultyDetails] = useState([]);
+  const [currentFacultyDetails, setCurrentFacultyDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTabKey, setSelectedTabKey] = useState("softwareSystems");
+  const [selectedTabKey, setSelectedTabKey] = useState("Software Systems");
+
+  const fetchFacultyDetails = async () => {
+    const faculty = await axios.get("/faculty");
+
+    setFacultyDetails(faculty);
+  };
 
   useEffect(() => {
-    const filterStaffs = staffs.filter(
-      (staff) => staff.department === selectedTabKey
-    );
-    setStaffDetails(filterStaffs);
-  }, [selectedTabKey]);
+    fetchFacultyDetails();
+  }, []);
+
+  useEffect(() => {
+    if (!search) {
+      const filterStaffs = facultyDetails.filter(
+        (staff) => staff.department === selectedTabKey
+      );
+
+      setfilteredFacultyDetails(filterStaffs);
+    } else {
+      const filterStaffs = facultyDetails.filter((staff) =>
+        staff.name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      setfilteredFacultyDetails(filterStaffs);
+    }
+  }, [selectedTabKey, search]);
 
   return (
-    <Tabs variant="unstyled">
-      <PageLayout
-        title="Home"
-        LeftSideBar={() => LeftSideBar(setSelectedTabKey)}
-      >
-        <div className="w-full grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {staffDetails.map((staff) => (
-            <button
-              key={staff.name}
-              className="w-full sm:w-60"
-              onClick={() => {
-                setCurrentStaffDetails(staff);
-                setIsModalOpen(true);
-              }}
-            >
-              <div className="relative w-full h-60">
-                <Image src={staff.image} layout="fill" />
-              </div>
-
-              <div className="text-white text-center bg-[#433840] py-4">
-                <h4>{staff.name}</h4>
-                <p className="text-[#c6edff] text-sm">{staff.designation}</p>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <PopUpModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          {...currentStaffDetails}
+    <PageLayout
+      title="Home"
+      breadcrumbItem={breadcrumbItem}
+      LeftSideBar={
+        <LeftSideBar
+          selectedTabKey={selectedTabKey}
+          setSelectedTabKey={setSelectedTabKey}
         />
-      </PageLayout>
-    </Tabs>
+      }
+    >
+      <div className="mt-5 md:mt-0 w-full grid py-4 bg-[#f1f1f1] justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {filteredFacultyDetails.map((staff) => (
+          <button
+            key={staff.name}
+            className="w-full sm:w-60"
+            onClick={() => {
+              setCurrentFacultyDetails(staff);
+              setIsModalOpen(true);
+            }}
+          >
+            <div className="relative w-full h-60">
+              <Image src={staff?.image} layout="fill" />
+            </div>
+
+            <div className="text-white text-center bg-[#433840] py-4">
+              <h4>{staff.name}</h4>
+              <p className="text-[#c6edff] text-sm">{staff.designation}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <FacultyDetailsModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        {...currentFacultyDetails}
+      />
+    </PageLayout>
   );
 };
 

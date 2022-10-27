@@ -31,7 +31,7 @@ export const Modal = ({
 
         <ModalBody>{children}</ModalBody>
 
-        <ModalFooter>{Footer && <Footer />}</ModalFooter>
+        {Footer && <ModalFooter>{Footer}</ModalFooter>}
       </ModalContent>
     </ChakraModal>
   );
