@@ -41,7 +41,7 @@ const sidebarLinks = [
 
 const LeftSideBar = ({ name, className, image, sidebarNavLinks }) => {
   const [currentTabKey, setCurrentTabKey] = useState(sidebarNavLinks[0].key);
-  const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(true);
+  const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(false);
 
   const NavbarContent = () => (
     <>
