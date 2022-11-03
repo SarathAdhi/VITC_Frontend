@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { Tabs, TabList, Tab } from "@chakra-ui/react";
 import { staffs } from "@utils/constants";
 import { LinkedItem } from "@elements/LinkedItem";
+import { Navigation } from "@elements/Navigation";
+// import Navbar from "@elements/Navbar";
+import Nav from "@elements/Nav";
+// import Header from "@elements/header";
 
 const tabLists = [
   { key: "softwareSystems", name: "Software Systems" },
@@ -14,6 +18,8 @@ const tabLists = [
   { key: "analytics", name: "Analytics" },
   { key: "iot", name: "IoT" },
 ];
+
+// const navbar = () => ;
 
 const LeftSideBar = (setSelectedTabKey) => (
   <div className="w-full md:h-screen md:sticky top-0 flex-1">
@@ -81,6 +87,7 @@ const Home = () => {
 
   return (
     <Tabs variant="unstyled">
+      <Nav />
       <PageLayout
         title="Home"
         LeftSideBar={() => LeftSideBar(setSelectedTabKey)}

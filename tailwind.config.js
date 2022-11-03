@@ -15,6 +15,9 @@ module.exports = {
         "span-15": "span 15 / span 15",
         "span-16": "span 16 / span 16",
       },
+      colors: {
+        "nav-blue": "#1979a9",
+      },
     },
   },
   plugins: [],
