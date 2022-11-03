@@ -1,4 +1,6 @@
 import { LinkedItem } from "@components/LinkedItem";
+import { H3 } from "@components/Text";
+import { MenuIcon } from "@heroicons/react/outline";
 import { PageWrapper } from "@layouts/PageWrapper";
 import axios from "@lib/axios";
 import { ViewFacultyDetails } from "@modules/faculty/View";
@@ -37,28 +39,24 @@ const sidebarLinks = [
   { dbName: "", name: "Other Information" },
 ];
 
-const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
+const LeftSideBar = ({ name, className, image, sidebarNavLinks }) => {
   const [currentTabKey, setCurrentTabKey] = useState(sidebarNavLinks[0].key);
+  const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(true);
 
-  return (
-    <div
-      className={clsx(
-        className,
-        "sticky top-0 md:h-screen bg-[#004c93] grid gap-5 justify-items-center place-content-center"
-      )}
-    >
+  const NavbarContent = () => (
+    <>
       <div className="relative hidden md:flex w-28 h-40 rounded-[50%] border-[#4b6fa5] border-4">
         <Image src={image} layout="fill" className="rounded-[50%]" />
       </div>
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col">
         {sidebarNavLinks.map(({ key, href }) => (
           <LinkedItem
             key={key}
             href={`#${key}`}
             className={clsx(
               currentTabKey === key && "!text-white",
-              "text-center font-bold text-lg text-[#ffffff8c] duration-200 hover:text-[#ffffffbf]"
+              "md:font-bold md:text-lg text-[#ffffff8c] duration-200 hover:text-[#ffffffbf]"
             )}
             onClick={() => setCurrentTabKey(key)}
           >
@@ -66,7 +64,44 @@ const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
           </LinkedItem>
         ))}
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      <div
+        className={clsx(
+          className,
+          "z-50 sticky top-0 h-screen bg-[#004c93] hidden md:grid gap-5 justify-items-center place-content-center"
+        )}
+      >
+        <NavbarContent />
+      </div>
+
+      <div
+        className={clsx(
+          className,
+          "z-50 sticky top-0 p-2 grid md:hidden gap-2 bg-[#004c93]"
+        )}
+      >
+        <div className="flex items-center justify-between">
+          <H3 className="text-white !font-medium">{name}</H3>
+
+          <button
+            onClick={() => setIsMobileNavbarOpen((pre) => !pre)}
+            className="border border-[#ffffff8c] py-1 px-2 rounded"
+          >
+            <MenuIcon className="w-6 h-6 text-[#ffffff8c]" />
+          </button>
+        </div>
+
+        {isMobileNavbarOpen && (
+          <div className="grid md:hidden gap-5 fixed bg-[#004c93] w-full top-12 p-2 left-0">
+            <NavbarContent />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
