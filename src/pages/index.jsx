@@ -62,7 +62,9 @@ const Home = () => {
 
       setfilteredFacultyDetails(filterStaffs);
     }
-  }, [selectedTabKey, search]);
+  }, [selectedTabKey, search, facultyDetails]);
+
+  if (!facultyDetails) return <div className="text-center">Loading...</div>;
 
   return (
     <PageLayout

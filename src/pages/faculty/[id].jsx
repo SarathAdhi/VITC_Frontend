@@ -1,33 +1,43 @@
-import {
-  Heading,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
 import { LinkedItem } from "@components/LinkedItem";
-import { H1, H2, H3, H4, H5, H6, P } from "@components/Text";
-import { CheckIcon } from "@heroicons/react/outline";
 import { PageWrapper } from "@layouts/PageWrapper";
 import axios from "@lib/axios";
-import { staffs } from "@utils/constants";
+import { ViewFacultyDetails } from "@modules/faculty/View";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-const sidebarNavLinks = [
-  { key: "about", href: "About" },
-  { key: "educational-details", href: "Educational Details" },
-  { key: "research-details", href: "Research Details" },
-  { key: "patents-published", href: "Patents Published" },
-  { key: "international-collaborations", href: "International Collaborations" },
+const sidebarLinks = [
+  { dbName: "", name: "About" },
+  { dbName: "educationalDetails", name: "Educational Details" },
+  { dbName: "postDoctoralExperience", name: "Post Doctoral Experiences" },
+  { dbName: "researchDetails", name: "Research Details" },
+  {
+    dbName: "ongoingConsultancyProjectDetails",
+    name: "Ongoing Consultancy Project",
+  },
+  {
+    dbName: "completedConsultancyProjectDetails",
+    name: "Completed Consultancy Project",
+  },
+  { dbName: "ongoingFundedProjectDetails", name: "Ongoing Funded Project" },
+  { dbName: "completedFundedProjectDetails", name: "Completed Funded Project" },
+  { dbName: "patentPublishedDetails", name: "Patent Published" },
+  { dbName: "patentGrantedDetails", name: "Patent Granted" },
+  { dbName: "bookPublishedDetails", name: "Book Published" },
+  { dbName: "awardDetails", name: "Awards & Recognitions" },
+  {
+    dbName: "majorInternationalCollaborationsDetails",
+    name: "Major International Collaborations",
+  },
+  {
+    dbName: "majorIndustryCollaborationsDetails",
+    name: "Major Industry Collaborations",
+  },
+  { dbName: "", name: "Other Information" },
 ];
 
-const LeftSideBar = ({ className, image, router }) => {
+const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
   const [currentTabKey, setCurrentTabKey] = useState(sidebarNavLinks[0].key);
 
   return (
@@ -83,20 +93,25 @@ const ViewStaff = () => {
   if (isLoading) return <div className="text-center">Loading...</div>;
   if (!facultyDetails) return <p className="text-center">Staff not found</p>;
 
-  const {
-    name,
-    school,
-    department,
-    designation,
-    educationalDetails,
-    researchDetails,
-    patentPublishedDetails,
-  } = facultyDetails;
+  const facultyDbKeys = Object.entries(facultyDetails);
 
-  const { googleScholar, hIndex, i10Index, orcid, scopus, specialization } =
-    researchDetails;
+  const sidebarNavLinks = sidebarLinks
+    .map(({ dbName, name }) => {
+      const key = name.toLowerCase().replaceAll(" ", "-");
 
-  console.log(facultyDetails);
+      const isDbKeyPresent = facultyDbKeys.some(
+        (dbKey) =>
+          dbKey[0] === dbName &&
+          (Array.isArray(dbKey[1]) ? dbKey[1].length > 0 : dbKey[1] !== "")
+      );
+
+      if (isDbKeyPresent || dbName === "")
+        return {
+          key,
+          href: name,
+        };
+    })
+    .filter((link) => link !== undefined);
 
   return (
     <PageWrapper title="" className="w-full grid md:grid-cols-16">
@@ -104,179 +119,10 @@ const ViewStaff = () => {
         className="w-full md:col-span-6 lg:col-span-5 xl:col-span-4 2xl:col-span-2"
         {...facultyDetails}
         router={router}
+        sidebarNavLinks={sidebarNavLinks}
       />
 
-      <div className="w-full flex flex-col md:col-span-10 lg:col-span-11 xl:col-span-12 2xl:col-span-14">
-        <section
-          id="about"
-          className="h-screen p-2 md:p-10 flex flex-col justify-center"
-        >
-          <Heading size={"2xl"} color={"#004c93"}>
-            {name}
-          </Heading>
-
-          <p className="text-lg text-[#6c757d]">
-            <span className="font-bold">Designation : </span>
-            <span className="font-medium">{designation}</span>
-          </p>
-
-          <p className="text-lg text-[#6c757d]">
-            <span className="font-bold">School / Centre : </span>
-            <span className="font-medium">{school}</span>
-          </p>
-
-          <p className="text-lg text-[#6c757d]">
-            <span className="font-bold">Department : </span>
-            <span className="font-medium">{department}</span>
-          </p>
-        </section>
-
-        <section
-          id="educational-details"
-          className="w-full h-screen p-2 md:p-10 flex flex-col justify-center gap-5"
-        >
-          <Heading>Educational Details</Heading>
-
-          <div className="grid gap-4">
-            {educationalDetails.map(
-              ({ id, graduatedIn, university, degree }) => (
-                <div
-                  key={id}
-                  className="w-full flex items-start justify-between"
-                >
-                  <div>
-                    <H4 className="text-[#343a40] !font-bold">{university}</H4>
-                    <H6 className="text-[#6C757D]">{degree}</H6>
-                  </div>
-
-                  <P className="text-[#004c93] !font-medium">
-                    Graduated in {graduatedIn}
-                  </P>
-                </div>
-              )
-            )}
-          </div>
-        </section>
-
-        <section
-          id="research-details"
-          className="h-screen p-2 md:p-10 flex flex-col justify-center gap-5"
-        >
-          <Heading>Research Details</Heading>
-
-          <div className="w-full flex items-start justify-between ">
-            <div className="grid gap-5">
-              <div>
-                <H3 className="text-[#6C757D] !text-lg">
-                  Areas of Specialization
-                </H3>
-
-                <P className="grid ">
-                  {specialization.map((spe) => (
-                    <span key={spe} className="flex items-center gap-1">
-                      <CheckIcon className="w-5 h-5" />
-                      {spe}
-                    </span>
-                  ))}
-                </P>
-              </div>
-
-              <div className="grid gap-4">
-                <div className="flex items-center gap-5">
-                  <Image
-                    src={"/assets/faculty/orcid.png"}
-                    className="object-contain"
-                    width={"112px"}
-                    height={"40px"}
-                  />
-
-                  <a href={orcid}>{orcid}</a>
-                </div>
-
-                <div className="flex items-center gap-5">
-                  <Image
-                    src={"/assets/faculty/scopus.png"}
-                    className="object-contain"
-                    width={"112px"}
-                    height={"40px"}
-                  />
-
-                  <a href={scopus}>{scopus}</a>
-                </div>
-
-                <div className="flex items-center gap-5">
-                  <Image
-                    src={"/assets/faculty/google-scholar.png"}
-                    className="object-contain"
-                    width={"112px"}
-                    height={"40px"}
-                  />
-
-                  <a href={googleScholar}>{googleScholar}</a>
-                </div>
-
-                <div className="flex items-center gap-5">
-                  <Image
-                    src={"/assets/faculty/hindex.png"}
-                    className="object-contain"
-                    width={"112px"}
-                    height={"40px"}
-                  />
-                  <P>: {hIndex}</P>
-                </div>
-
-                <div className="flex items-center gap-5">
-                  <Image
-                    src={"/assets/faculty/i10index.png"}
-                    className="object-contain"
-                    width={"112px"}
-                    height={"40px"}
-                  />
-                  <P>: {i10Index}</P>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="patents-published"
-          className="w-full h-screen p-2 md:p-10 flex flex-col justify-center"
-        >
-          <Heading>Patent Published Details</Heading>
-
-          <div className="!grid">
-            <TableContainer>
-              <Table variant={"striped"}>
-                <Thead>
-                  <Tr className="bg-[#004c93]">
-                    <Th color={"white"}>Title</Th>
-                    <Th color={"white"}>Application No.</Th>
-                  </Tr>
-                </Thead>
-
-                <Tbody>
-                  {patentPublishedDetails.map(
-                    ({ id, title, applicationNumber }) => (
-                      <Tr key={id + title}>
-                        <Td>{title}</Td>
-                        <Td>{applicationNumber}</Td>
-                      </Tr>
-                    )
-                  )}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </div>
-        </section>
-
-        <section
-          id="international-collaborations"
-          className="h-screen p-2 md:p-10 flex flex-col justify-center"
-        >
-          <Heading>International Collaborations</Heading>
-        </section>
-      </div>
+      <ViewFacultyDetails facultyDetails={facultyDetails} />
     </PageWrapper>
   );
 };
