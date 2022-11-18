@@ -2,7 +2,6 @@ import { PageLayout } from "@layouts/PageLayout";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "@lib/axios";
-import { LeftSideBar } from "@modules/faculty/Home/LeftSideBar";
 import { FacultyDetailsModal } from "@modules/faculty/Home/FacultyDetailsModal";
 import { useRouter } from "next/router";
 
@@ -33,7 +32,6 @@ const Home = () => {
   console.log(search);
 
   const [facultyDetails, setFacultyDetails] = useState([]);
-  const [filteredFacultyDetails, setfilteredFacultyDetails] = useState([]);
   const [currentFacultyDetails, setCurrentFacultyDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTabKey, setSelectedTabKey] = useState("Software Systems");
@@ -48,37 +46,12 @@ const Home = () => {
     fetchFacultyDetails();
   }, []);
 
-  useEffect(() => {
-    if (!search) {
-      const filterStaffs = facultyDetails.filter(
-        (staff) => staff.department === selectedTabKey
-      );
-
-      setfilteredFacultyDetails(filterStaffs);
-    } else {
-      const filterStaffs = facultyDetails.filter((staff) =>
-        staff.name.toLowerCase().includes(search.toLowerCase())
-      );
-
-      setfilteredFacultyDetails(filterStaffs);
-    }
-  }, [selectedTabKey, search, facultyDetails]);
-
   if (!facultyDetails) return <div className="text-center">Loading...</div>;
 
   return (
-    <PageLayout
-      title="Home"
-      breadcrumbItem={breadcrumbItem}
-      LeftSideBar={
-        <LeftSideBar
-          selectedTabKey={selectedTabKey}
-          setSelectedTabKey={setSelectedTabKey}
-        />
-      }
-    >
+    <PageLayout title="Home" breadcrumbItem={breadcrumbItem}>
       <div className="mt-5 md:mt-0 w-full grid py-4 bg-[#f1f1f1] justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {filteredFacultyDetails.map((staff) => (
+        {facultyDetails.map((staff) => (
           <button
             key={staff.name}
             className="w-full sm:w-60"
