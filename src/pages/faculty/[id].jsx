@@ -4,6 +4,7 @@ import { MenuIcon } from "@heroicons/react/outline";
 import { PageWrapper } from "@layouts/PageWrapper";
 import axios from "@lib/axios";
 import { ViewFacultyDetails } from "@modules/faculty/View";
+import { getIdFormat } from "@utils/format";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -113,16 +114,14 @@ const ViewStaff = () => {
   const { id } = router.query;
 
   const fetchFacultyDetails = async () => {
-    const faculty = await axios.get(`/faculty/${id}`);
+    const faculty = await axios.get(`/faculty/` + getIdFormat(id));
 
     setFacultyDetails(faculty);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (id) {
-      fetchFacultyDetails();
-    }
+    if (id) fetchFacultyDetails();
   }, [id]);
 
   if (isLoading) return <div className="text-center">Loading...</div>;

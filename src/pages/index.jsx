@@ -92,7 +92,9 @@ const Home = () => {
             </div>
 
             <div className="text-white text-center bg-[#433840] py-4">
-              <h4>{staff.name}</h4>
+              <h4>
+                {staff.salutation} {staff.name}
+              </h4>
               <p className="text-[#c6edff] text-sm">{staff.designation}</p>
             </div>
           </button>

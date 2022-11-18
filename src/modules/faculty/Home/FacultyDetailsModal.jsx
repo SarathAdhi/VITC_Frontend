@@ -1,5 +1,6 @@
 import { LinkedItem } from "@components/LinkedItem";
 import { Modal } from "@elements/Modal";
+import { staffUrlFormat } from "@utils/format";
 
 const ModalFooter = ({ href }) => (
   <div className="w-full flex items-start">
@@ -14,6 +15,7 @@ const ModalFooter = ({ href }) => (
 
 export const FacultyDetailsModal = ({
   id,
+  salutation,
   name,
   college,
   email,
@@ -24,7 +26,9 @@ export const FacultyDetailsModal = ({
     title={name}
     isOpen={isModalOpen}
     setIsOpen={setIsModalOpen}
-    Footer={<ModalFooter href={`/faculty/${id}`} />}
+    Footer={
+      <ModalFooter href={`/faculty/` + staffUrlFormat(salutation, name, id)} />
+    }
   >
     <div>
       <p>Email: {email}</p>
