@@ -1,4 +1,6 @@
+import { Button, Spinner } from "@chakra-ui/react";
 import { LinkedItem } from "@components/LinkedItem";
+import { H1 } from "@components/Text";
 import { SlideOver } from "@elements/SlideOver";
 import { MenuIcon } from "@heroicons/react/outline";
 import { PageWrapper } from "@layouts/PageWrapper";
@@ -39,13 +41,13 @@ const sidebarLinks = [
   { dbName: "", name: "Other Information" },
 ];
 
-const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
+const LeftSideBar = ({ name, className, image, sidebarNavLinks }) => {
   const [currentTabKey, setCurrentTabKey] = useState(sidebarNavLinks[0].key);
   const [isMobileNavbarOpen, setIsMobileNavbarOpen] = useState(false);
 
   const NavbarContent = () => (
     <>
-      <div className="hidden md:flex w-44 h-44 rounded-full border-[#4b6fa5] border-4">
+      <div className="relative hidden md:flex w-40 h-40 rounded-full border-[#4b6fa5] border-4">
         <img src={image} className="w-full h-full rounded-full" />
       </div>
 
@@ -72,7 +74,7 @@ const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
       <div
         className={clsx(
           className,
-          "z-50 sticky top-0 h-screen bg-[#004c93] hidden md:grid gap-10 justify-items-center place-content-center"
+          "z-50 sticky top-0 h-screen bg-[#004c93] hidden md:grid gap-5 justify-items-center place-content-center"
         )}
       >
         <NavbarContent />
@@ -81,7 +83,7 @@ const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
       <div
         className={clsx(
           className,
-          "z-50 sticky top-0 grid md:hidden gap-2 bg-[#004c93]"
+          "z-50 sticky top-0 p-2 grid md:hidden gap-2 bg-[#004c93]"
         )}
       >
         <div className="flex items-center justify-between">
@@ -89,7 +91,7 @@ const LeftSideBar = ({ className, image, sidebarNavLinks }) => {
 
           <button
             onClick={() => setIsMobileNavbarOpen((pre) => !pre)}
-            className="mx-2 border border-[#ffffff8c] py-1 px-2 rounded"
+            className="border border-[#ffffff8c] py-1 px-2 rounded"
           >
             <MenuIcon className="w-6 h-6 text-[#ffffff8c]" />
           </button>
@@ -114,9 +116,12 @@ const ViewStaff = () => {
   const { id } = router.query;
 
   const fetchFacultyDetails = async () => {
-    const faculty = await axios.get(`/faculty/` + getIdFormat(id));
+    const formattedId = getIdFormat(id);
 
-    setFacultyDetails(faculty);
+    if (formattedId) {
+      const faculty = await axios.get(`/faculty/` + formattedId);
+      setFacultyDetails(faculty);
+    }
     setIsLoading(false);
   };
 
@@ -124,12 +129,35 @@ const ViewStaff = () => {
     if (id) fetchFacultyDetails();
   }, [id]);
 
-  if (isLoading) return <div className="text-center">Loading...</div>;
-  if (!facultyDetails) return <p className="text-center">Staff not found</p>;
+  if (isLoading)
+    return (
+      <div className="h-screen grid place-content-center">
+        <Spinner />
+      </div>
+    );
+
+  if (!facultyDetails || !facultyDetails.isApproved)
+    return (
+      <div className="h-screen grid place-content-center gap-4">
+        <H1 className="!text-3xl sm:!text-5xl text-center grid sm:flex gap-2 sm:gap-5 items-center justify-center">
+          Staff Not Found
+          <Button
+            onClick={() => {
+              history.back();
+            }}
+          >
+            Go Back
+          </Button>
+        </H1>
+
+        <img
+          src="/assets/staff-not-found.jpg"
+          className="max-w-full w-[800px]"
+        />
+      </div>
+    );
 
   const facultyDbKeys = Object.entries(facultyDetails);
-
-  console.log({ facultyDetails });
 
   const sidebarNavLinks = sidebarLinks
     .map(({ dbName, name }) => {

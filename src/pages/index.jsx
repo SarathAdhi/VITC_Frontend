@@ -29,8 +29,6 @@ const Home = () => {
 
   const { search } = router.query;
 
-  console.log(search);
-
   const [facultyDetails, setFacultyDetails] = useState([]);
   const [currentFacultyDetails, setCurrentFacultyDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,9 +58,7 @@ const Home = () => {
               setIsModalOpen(true);
             }}
           >
-            <div className="relative w-full h-60">
-              <Image src={staff?.image} layout="fill" />
-            </div>
+            <img src={staff?.image} className="w-full h-60" />
 
             <div className="text-white text-center bg-[#433840] py-4">
               <h4>

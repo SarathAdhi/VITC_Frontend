@@ -12,7 +12,7 @@ export const SlideOver = ({ isOpen, setIsOpen, children }) => {
   return (
     <Drawer
       isOpen={isOpen}
-      placement="left"
+      placement="right"
       size={"full"}
       onClose={() => setIsOpen(false)}
     >
