@@ -1,5 +1,6 @@
+import { Button, Spinner } from "@chakra-ui/react";
 import { LinkedItem } from "@components/LinkedItem";
-import { H3 } from "@components/Text";
+import { H1, H2, H3 } from "@components/Text";
 import { SlideOver } from "@elements/SlideOver";
 import { MenuIcon } from "@heroicons/react/outline";
 import { PageWrapper } from "@layouts/PageWrapper";
@@ -47,8 +48,8 @@ const LeftSideBar = ({ name, className, image, sidebarNavLinks }) => {
 
   const NavbarContent = () => (
     <>
-      <div className="relative hidden md:flex w-40 h-40 rounded-[50%] border-[#4b6fa5] border-4">
-        <Image src={image} layout="fill" className="rounded-[50%]" />
+      <div className="relative hidden md:flex w-40 h-40 rounded-full border-[#4b6fa5] border-4">
+        <img src={image} className="w-full h-full rounded-full" />
       </div>
 
       <div className="flex flex-col">
@@ -87,14 +88,7 @@ const LeftSideBar = ({ name, className, image, sidebarNavLinks }) => {
         )}
       >
         <div className="flex items-center justify-between">
-          {/* <Image
-            src="/assets/vitlogo.png"
-            layout="fill"
-            className="h-40 w-40"
-            alt="VIT Logo"
-          /> */}
           <img src="/assets/vitlogo.png" className="h-14" />
-          {/* <H3 className="text-white !font-medium">{name}</H3> */}
 
           <button
             onClick={() => setIsMobileNavbarOpen((pre) => !pre)}
@@ -104,17 +98,12 @@ const LeftSideBar = ({ name, className, image, sidebarNavLinks }) => {
           </button>
         </div>
 
-        {/* {isMobileNavbarOpen && ( */}
         <SlideOver
           isOpen={isMobileNavbarOpen}
           setIsOpen={setIsMobileNavbarOpen}
         >
           <NavbarContent />
         </SlideOver>
-        {/* <div className="grid md:hidden gap-5 fixed bg-[#004c93] w-full top-12 p-2 left-0">
-             <NavbarContent />
-           </div> */}
-        {/* )} */}
       </div>
     </>
   );
@@ -128,9 +117,12 @@ const ViewStaff = () => {
   const { id } = router.query;
 
   const fetchFacultyDetails = async () => {
-    const faculty = await axios.get(`/faculty/` + getIdFormat(id));
+    const formattedId = getIdFormat(id);
 
-    setFacultyDetails(faculty);
+    if (formattedId) {
+      const faculty = await axios.get(`/faculty/` + formattedId);
+      setFacultyDetails(faculty);
+    }
     setIsLoading(false);
   };
 
@@ -138,8 +130,33 @@ const ViewStaff = () => {
     if (id) fetchFacultyDetails();
   }, [id]);
 
-  if (isLoading) return <div className="text-center">Loading...</div>;
-  if (!facultyDetails) return <p className="text-center">Staff not found</p>;
+  if (isLoading)
+    return (
+      <div className="h-screen grid place-content-center">
+        <Spinner />
+      </div>
+    );
+
+  if (!facultyDetails || !facultyDetails.isApproved)
+    return (
+      <div className="h-screen grid place-content-center gap-4">
+        <H1 className="!text-3xl sm:!text-5xl text-center grid sm:flex gap-2 sm:gap-5 items-center justify-center">
+          Staff Not Found
+          <Button
+            onClick={() => {
+              history.back();
+            }}
+          >
+            Go Back
+          </Button>
+        </H1>
+
+        <img
+          src="/assets/staff-not-found.jpg"
+          className="max-w-full w-[800px]"
+        />
+      </div>
+    );
 
   const facultyDbKeys = Object.entries(facultyDetails);
 

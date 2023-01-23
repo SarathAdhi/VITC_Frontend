@@ -16,7 +16,6 @@ import { showSuccessToast } from "@utils/toast";
 const Divider = () => <StackDivider p={2} />;
 
 async function deleteEducationalDetails(id) {
-  console.log(id);
   if (id) {
     const { message } = await axios.delete(
       `/faculty/educational-details/${id}`
