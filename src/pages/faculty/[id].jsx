@@ -1,6 +1,6 @@
 import { Button, Spinner } from "@chakra-ui/react";
 import { LinkedItem } from "@components/LinkedItem";
-import { H1, H2, H3 } from "@components/Text";
+import { H1 } from "@components/Text";
 import { SlideOver } from "@elements/SlideOver";
 import { MenuIcon } from "@heroicons/react/outline";
 import { PageWrapper } from "@layouts/PageWrapper";
@@ -8,7 +8,6 @@ import axios from "@lib/axios";
 import { ViewFacultyDetails } from "@modules/faculty/View";
 import { getIdFormat } from "@utils/format";
 import clsx from "clsx";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
