@@ -17,9 +17,7 @@ import { ResearchDetails } from "./submodules/ResearchDetails";
 
 export const ViewFacultyDetails = ({ facultyDetails }) => {
   return (
-    // <div className="w-full flex flex-col md:col-span-10 lg:col-span-11 xl:col-span-12 2xl:col-span-14">
     <div className="w-auto flex flex-col md:col-span-10 lg:col-span-11 xl:col-span-12 2xl:col-span-14">
-      {/* <div className="w-full flex flex-col"> */}
       <About {...facultyDetails} />
 
       <EducationalDetails {...facultyDetails} />

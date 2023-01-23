@@ -21,11 +21,11 @@ export const SlideOver = ({ isOpen, setIsOpen, children }) => {
       <DrawerContent className="!bg-[#333333]">
         <DrawerCloseButton mt={2} fontSize={"md"} color={"white"} />
 
-        <DrawerHeader bgColor={"#004c93"}>
+        <DrawerHeader bgColor={"#3F51B5"}>
           <H2 className="text-white">VIT</H2>
         </DrawerHeader>
 
-        <DrawerBody className="text-center">{children}</DrawerBody>
+        <DrawerBody>{children}</DrawerBody>
       </DrawerContent>
     </Drawer>
   );

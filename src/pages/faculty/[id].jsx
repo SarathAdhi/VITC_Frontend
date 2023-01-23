@@ -181,7 +181,7 @@ const ViewStaff = () => {
   return (
     <PageWrapper title="" className="w-full flex flex-col md:flex-row">
       <LeftSideBar
-        className="w-full md:w-[300px]"
+        className="w-full md:w-[300px] flex-shrink-0"
         {...facultyDetails}
         router={router}
         sidebarNavLinks={sidebarNavLinks}
@@ -190,19 +190,6 @@ const ViewStaff = () => {
       <ViewFacultyDetails facultyDetails={facultyDetails} />
     </PageWrapper>
   );
-
-  // return (
-  //   <PageWrapper title="" className="w-full grid md:grid-cols-16">
-  //     <LeftSideBar
-  //       className="w-full md:col-span-6 lg:col-span-5 xl:col-span-4 2xl:col-span-2"
-  //       {...facultyDetails}
-  //       router={router}
-  //       sidebarNavLinks={sidebarNavLinks}
-  //     />
-
-  //     <ViewFacultyDetails facultyDetails={facultyDetails} />
-  //   </PageWrapper>
-  // );
 };
 
 export default ViewStaff;
