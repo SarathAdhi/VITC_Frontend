@@ -1,5 +1,7 @@
 import { Button, Spinner } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
 import { LinkedItem } from "@components/LinkedItem";
+import { H1 } from "@components/Text";
 import { H1 } from "@components/Text";
 import { SlideOver } from "@elements/SlideOver";
 import { MenuIcon } from "@heroicons/react/outline";
