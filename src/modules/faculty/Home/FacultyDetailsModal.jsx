@@ -26,9 +26,7 @@ export const FacultyDetailsModal = ({
     title={name}
     isOpen={isModalOpen}
     setIsOpen={setIsModalOpen}
-    Footer={
-      <ModalFooter href={`/faculty/` + staffUrlFormat(salutation, name, id)} />
-    }
+    Footer={<ModalFooter href={`/faculty/` + staffUrlFormat(name, id)} />}
   >
     <div>
       <p>Email: {email}</p>
