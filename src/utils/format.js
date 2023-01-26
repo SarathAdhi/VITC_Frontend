@@ -1,8 +1,7 @@
-export const staffUrlFormat = (salutation, name, id) => {
-  const newSalutation = salutation?.replace(".", "").toLowerCase();
+export const staffUrlFormat = (name, id) => {
   const newName = name?.replaceAll(" ", "-").toLowerCase();
 
-  return `${newSalutation}-${newName}-${id}`;
+  return `${newName}-${id}`;
 };
 
 export const getIdFormat = (url) => {

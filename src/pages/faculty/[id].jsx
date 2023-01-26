@@ -119,7 +119,10 @@ const ViewStaff = () => {
     const formattedId = getIdFormat(id);
 
     if (formattedId) {
-      const faculty = await axios.get(`/faculty/` + formattedId);
+      const faculty = await axios.get(
+        `/faculty/` + formattedId + "?originalData=true"
+      );
+
       setFacultyDetails(faculty);
     }
     setIsLoading(false);
